@@ -13,15 +13,14 @@ TPR-4x4x4-Solver
  - Memory: 30M with min2phase package.
  - Initialization time: 10s
  - Length Distribution (2000 random-state solves, average 44.626 moves):
- 40  5
- 41  28
- 42  93
- 43  265
- 44  564
- 45  652
- 46  352
- 47  41
-
+ - 40  5
+ - 41  28
+ - 42  93
+ - 43  265
+ - 44  564
+ - 45  652
+ - 46  352
+ - 47  41
 
 # Note:
  - At its first executing, about 20M's tables will be generated and written to disk (md5(Center1.move) = 2b31ffa7ee59cc2313d2fa9b41106a03, md5(Edge3.prunS) = 5fab4b768165375124eaf83e1a884c89). 
