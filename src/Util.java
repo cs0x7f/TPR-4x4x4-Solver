@@ -32,6 +32,35 @@ class Util {
 		return new BufferedInputStream(new FileInputStream(filename));
 	}
 	
+	static boolean read(int[] arr, int idx, int length, String filename) {
+		try {
+			DataInputStream in = new DataInputStream(getInput(filename));
+			for (int i=idx, len=idx+length; i<len; i++) {
+				arr[i] = in.readInt();
+			}
+			in.close();
+			return true;
+		} catch (IOException e) {
+			// e.printStackTrace();
+			return false;
+		}
+	}
+
+	static boolean write(int[] arr, int idx, int length, String filename) {
+		try {
+			DataOutputStream out = new DataOutputStream(getOutput(filename));
+			for (int i=idx, len=idx+length; i<len; i++) {
+				out.writeInt(arr[i]);
+			}
+			out.close();
+			return true;
+		} catch (IOException e) {
+			// e.printStackTrace();
+			return false;
+		}
+	}
+
+
 	static boolean write(byte[] data, int idx, int length, String filename) {
 		try {
 			OutputStream os = getOutput(filename);
@@ -202,6 +231,14 @@ class Util {
 			}
 		}
 		return parity;
+	}
+
+	static void setPruning(int[] table, int index, int value) {
+		table[index >> 3] ^= (0x0f ^ value) << ((index & 7) << 2);
+	}
+
+	static int getPruning(int[] table, int index) {
+		return (table[index >> 3] >> ((index & 7) << 2)) & 0x0f;
 	}
 
 }

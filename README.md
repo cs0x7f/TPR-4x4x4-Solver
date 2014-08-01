@@ -5,26 +5,26 @@ TPR-4x4x4-Solver
 
 # Usage:
  - sh make.sh -> threephase.jar
- - java -jar threephase.jar N -> solving N random cube with 40 random moves' scramble.
+ - java -jar threephase.jar N -> solving N random cube with random-state scramble.
 
-# Test (java -jar threephase.jar 100 / 2.2GHz):
- - Average solution length: 44.60 moves(face turn metric).
+# Test ("java -jar threephase.jar 2000" @Intel core i7 2670QM):
+ - Average solution length: 44.46 moves(face turn metric).
  - Average solving time: 300 ms.
- - Memory: 20M with generated tables and min2phase package, 100M without any table.
- - Length Distribution (2000 solves, average 44.626 moves):
+ - Memory: 30M with min2phase package.
+ - Initialization time: 10s
+ - Length Distribution (2000 random-state solves, average 44.626 moves):
+ 40  5
+ 41  28
+ 42  93
+ 43  265
+ 44  564
+ 45  652
+ 46  352
+ 47  41
 
- - 40	1
- - 41	19
- - 42	75
- - 43	232
- - 44	526
- - 45	672
- - 46	404
- - 47	69
- - 48	2
 
 # Note:
- - At its first executing, about 10M's tables will be generated and written to disk. The generation spends several minutes and need at least 100M memory(4~5 times larger than execute it with generated tables), and it will speed up with multiple processors.
+ - At its first executing, about 20M's tables will be generated and written to disk (md5(Center1.move) = 2b31ffa7ee59cc2313d2fa9b41106a03, md5(Edge3.prunS) = 5fab4b768165375124eaf83e1a884c89). 
 
 # Algorithm:
  - [Tsai's 8-step 4x4x4 algorithm](http://cubezzz.dyndns.org/drupal/?q=node/view/73#comment-2588)

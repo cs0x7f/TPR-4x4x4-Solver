@@ -120,21 +120,22 @@ public final class Search implements Runnable {
 		int lasttot = 0;
 		for (int i=inf; i!=0; --i) {
 //			first.randomMove();
-			System.out.println(first.randomMove());
+			System.out.println(first.randomState());
 			int curlen = first.totlen - lasttot;
 			lasttot = first.totlen;
 			dis[curlen]++;
-//			for (int j=0; j<60; j++) {
-//				if (dis[j] != 0) {
-//					System.out.println(String.format("%d\t%d\t%d", (inf-i+1), j, dis[j]));
-//				}
-//			}
-//			System.out.println(String.format("%5.2f\t%f", first.totlen / 1.0 / (inf-i+1), first.tottime / (inf-i+1) / 1000000.0));
+			for (int j=0; j<60; j++) {
+				if (dis[j] != 0) {
+					System.out.println(String.format("%d\t%d\t%d", (inf-i+1), j, dis[j]));
+				}
+			}
+			System.out.println(String.format("%5.2f\t%f", first.totlen / 1.0 / (inf-i+1), first.tottime / (inf-i+1) / 1000000.0));
 		}
 	}
 	
 	static {
 		System.out.println("Initialization...");
+		System.out.println("Initialize 3x3x3 Solver...");
 		DataInputStream dis = null;
 		try {
 			dis = new DataInputStream(new BufferedInputStream(new FileInputStream("twophase.data")));
@@ -154,9 +155,13 @@ public final class Search implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Initialize Center1 Solver...");
 		Center1.init();
+		System.out.println("Initialize Center2 Solver...");
 		Center2.init();
+		System.out.println("Initialize Center3 Solver...");
 		Center3.init();
+		System.out.println("Initialize Edge3 Solver...");
 		Edge3.init();
 		System.out.println("OK");	
 	}
@@ -178,7 +183,7 @@ public final class Search implements Runnable {
 	}
 	
 	public String randomState() {
-		calc(System.currentTimeMillis());
+		calc(r.nextInt(0x7fffffff)/*System.currentTimeMillis()*/);
 		return solution;
 	}
 	
@@ -282,11 +287,11 @@ public final class Search implements Runnable {
 					ct3.set(arr2[i].getCenter(), eparity ^ arr2[i].getCorner().getParity());
 					int ct = ct3.getct();
 					int edge = e12.get();
-					int prun = Math.max(e12.getprunmod(edge), e12.getprunmod(e12.getmv_x()));
+					int prun = Util.getPruning(Edge3.eprun, e12.getsym());
 					int lm = 20;//std3move[arr2[i].moveseq2[arr2[i].length2-1]/3*3+1];
 				
 					if (prun <= length123 - arr2[i].length1 - arr2[i].length2 
-							&& search3(edge, ct, prun, length123 - arr2[i].length1 - arr2[i].length2, lm, 0)) {
+							&& search3(edge, ct, length123 - arr2[i].length1 - arr2[i].length2, lm, 0)) {
 						solcnt++;
 	//					System.out.println(length123 + " " + solcnt);
 	//					if (solcnt == 5) {
@@ -298,7 +303,6 @@ public final class Search implements Runnable {
 			}
 			MAX_LENGTH3++;
 		} while (length123 == 100);
-//		System.out.println(System.nanoTime() - time);
 
 		FullCube solcube = new FullCube(arr2[index]);
 //		move1 = solcube.moveseq1;
@@ -328,6 +332,7 @@ public final class Search implements Runnable {
 
 		StringBuffer str = new StringBuffer();
 		str.append(solcube.getMoveString(false, true));
+		System.out.println(System.nanoTime() - time);
 		
 		synchronized (solution) {
 			solution = str.toString();
@@ -469,8 +474,8 @@ public final class Search implements Runnable {
 		ct3.set(c2.getCenter(), eparity ^ c2.getCorner().getParity());
 		int ct = ct3.getct();
 		int edge = e12.get();
-		int prun = Math.max(e12.getprunmod(edge), e12.getprunmod(e12.getmv_x()));
-		
+		int prun = Util.getPruning(Edge3.eprun, e12.getsym());
+
 		if (arr2[arr2idx] == null) {
 			arr2[arr2idx] = new FullCube(c2);
 		} else {
@@ -482,23 +487,17 @@ public final class Search implements Runnable {
 
 		return arr2idx == arr2.length;
 	}
-	
-	boolean search3(int edge, int ct, int prun, int maxl, int lm, int depth) {
+
+	public boolean search3(int edge, int ct, int maxl, int lm, int depth) {
 		if (maxl == 0) {
-			return edge==0 && ct==0;
+			return edge == 0 && ct == 0;
 		}
 		tempe[depth].set(edge);
-		
-		if (Edge3.getprunmod(tempe[depth].getmv_x()) > maxl) {
-			return false;
-		}
-		
 		for (int m=0; m<17; m++) {
 			if (ckmv3[lm][m]) {
 				m = skipAxis3[m];
 				continue;
 			}
-				
 			int ctx = Center3.ctmove[ct][m];
 			int prun1 = Center3.prun[ctx];
 			if (prun1 >= maxl) {
@@ -508,7 +507,14 @@ public final class Search implements Runnable {
 				continue;
 			}
 			int edgex = Edge3.getmv(tempe[depth].edge, m);
-			int prunx = Edge3.getprunmod(edgex/*, prun*/);
+
+			int cord1x = edgex / Edge3.N_RAW;
+			int symcord1x = Edge3.raw2sym[cord1x];
+			int symx = symcord1x & 0x7;
+			symcord1x >>= 3;
+			int cord2x = Edge3.getmvrot(tempe[depth].edge, m<<3|symx) % Edge3.N_RAW;
+
+			int prunx = Util.getPruning(Edge3.eprun, symcord1x * Edge3.N_RAW + cord2x);
 			if (prunx >= maxl) {
 				if (prunx > maxl && m < 14) {
 					m = skipAxis3[m];
@@ -516,7 +522,7 @@ public final class Search implements Runnable {
 				continue;
 			}
 
-			if (search3(edgex, ctx, prunx, maxl-1, m, depth+1)) {
+			if (search3(edgex, ctx, maxl - 1, m, depth + 1)) {
 				move3[depth] = m;
 				return true;
 			}
