@@ -13,9 +13,7 @@ class EdgeCube {
 
 	static int[] EdgeMap = {F2, L2, B2, R2, B8, L8, F8, R8, F4, B6, B4, F6, U8, U4, U2, U6, D8, D4, D2, D6, L6, L4, R6, R4};
 
-
 	byte[] ep = new byte[24];
-//	int eparity = 0;
 	
 	EdgeCube() {
 		for (byte i=0; i<24; i++) {
@@ -37,7 +35,6 @@ class EdgeCube {
 				ep[t] = m;
 			}
 		}
-//		eparity = getParity();
 	}
 	
 	EdgeCube(int[] moveseq) {
@@ -55,7 +52,6 @@ class EdgeCube {
 		for (int i=0; i<24; i++) {
 			this.ep[i] = c.ep[i];
 		}
-//		this.eparity = c.eparity;
 	}
 	
 	void print() {
@@ -132,7 +128,6 @@ Center Cubies:
 	 */
 	 
 	void move(int m) {
-//		eparity ^= epmv[m];
 		int key = m % 3;
 		m /= 3;
 		switch (m) {

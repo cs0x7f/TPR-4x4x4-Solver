@@ -37,24 +37,13 @@ class Edge3 {
 	int[] temp;
 	boolean isStd = true;
 
-	static int[] prun;
-	static byte[] prunP;
-
 	static int[][] mvrot = new int[20 * 8][12];
 	static int[][] mvroto = new int[20 * 8][12];
-
 	static int[][] edgex = new int[20][12];
-							
 	static int[][] edgeox = new int[20][12];
 	
-	private static int[] ptb = new int[16 * 4];
-	private static byte[] GetPacked = new byte[243*8];
 	private static int[] fact = {19958400, 1814400, 181440, 20160, 2520, 360, 60, 12, 3, 1};
 	static int[] factX = {1, 1, 2/2, 6/2, 24/2, 120/2, 720/2, 5040/2, 40320/2, 362880/2, 3628800/2, 39916800/2, 479001600/2};
-
-	public static void main(String[] args) {
-		init();
-	}
 
 	static void initEdgex() {
 		Edge3 e = new Edge3();
@@ -109,38 +98,17 @@ class Edge3 {
 				sym2raw[count++] = i;
 			}
 		}
-		// System.out.println(count);
+		assert count == 1538;
 	}
 	
 	static void init() {
-
 		initEdgex();
-
 		initRaw2Sym();
 
 		if (!read(eprun, 0, eprun.length, "Edge3.prunS")) {
 			createPrun();
 			write(eprun, 0, eprun.length, "Edge3.prunS");
 		}
-
-		for (int i=0; i<243; i++) {
-			for (int j=0; j<5; j++) {
-				int l = i;
-				for (int k=1; k<=j; k++)
-					l /= 3;
-				GetPacked[i*8+j] = (byte)(l % 3);
-			}
-		}
-		for (int i=0; i<16; i++) {
-			for (int j=0; j<3; j++) {
-				ptb[i*4+j] = i + (j - i + 18 + 1) % 3 - 1;
-			}
-		}
-		// prunP = new byte[12*11*10*9*8*7*6*5*4*3/5];
-		// if (!read(prunP, 0, prunP.length, "Edge3.prunP")) {
-		// 	createPrun0();
-		// 	write(prunP, 0, prunP.length, "Edge3.prunP");
-		// }
 	}
 
 	public String toString() {
@@ -185,58 +153,39 @@ class Edge3 {
 
 				for (int m=0; m<17; m++) {
 					int cord1x = getmv4(e.edge, m);
-					// f.set(e);
-					// f.move(m);
-					// int cord1x = f.get4();
 					int symcord1x = raw2sym[cord1x];
 					int symx = symcord1x & 0x7;
 					symcord1x >>= 3;
-
-					// f.set(e);
-					// f.move(m);
-					// f.rotate(symx);
-					// int cord2x = f.get() % N_RAW;
-					// if (cord2x != getmvrot(e.edge, m<<3|symx) % N_RAW) {
-					// 	System.out.print('e');
-					// }
 					int cord2x = getmvrot(e.edge, m<<3|symx) % N_RAW;
-					// if (f.get() / N_RAW != sym2raw[symcord1x]) {
-					// 	for (int rt=0; rt<8; rt++) {
-					// 		g.set(f);
-					// 		g.rotate(rt);
-					// 		System.out.println(sym2raw[symcord1x] + "\t" + g.get() / N_RAW);
-					// 	}
-					// 	System.out.println((int) symstate[symcord1x]);
-					// }
-
 					int idx = symcord1x * N_RAW + cord2x;
-					if (getPruning(eprun, idx) == chk) {
-						setPruning(eprun, inv ? i : idx, depth + 1);
-						done++;
-						if ((done & 0xffff) == 0) {
-							System.out.print(String.format("%d\r", done));
-						}
-						if (inv) {
-							break;
-						}
-						char symState = symstate[symcord1x];
-						if (symState == 1){
-							continue;
-						}
-						f.set(e);
-						f.move(m);
-						f.rotate(symx);
-						for (int j=1; (symState >>= 1) != 0; j++) {
-							if ((symState & 1) == 1) {
-								g.set(f);
-								g.rotate(j);
-								int idxx = symcord1x * N_RAW + g.get() % N_RAW;
-								if (getPruning(eprun, idxx) == chk) {
-									setPruning(eprun, idxx, depth + 1);
-									done++;
-									if ((done & 0xffff) == 0) {
-										System.out.print(String.format("%d\r", done));
-									}
+					if (getPruning(eprun, idx) != chk) {
+						continue;
+					}
+					setPruning(eprun, inv ? i : idx, depth + 1);
+					done++;
+					if ((done & 0x3ffff) == 0) {
+						System.out.print(String.format("%d\r", done));
+					}
+					if (inv) {
+						break;
+					}
+					char symState = symstate[symcord1x];
+					if (symState == 1){
+						continue;
+					}
+					f.set(e);
+					f.move(m);
+					f.rotate(symx);
+					for (int j=1; (symState >>= 1) != 0; j++) {
+						if ((symState & 1) == 1) {
+							g.set(f);
+							g.rotate(j);
+							int idxx = symcord1x * N_RAW + g.get() % N_RAW;
+							if (getPruning(eprun, idxx) == chk) {
+								setPruning(eprun, idxx, depth + 1);
+								done++;
+								if ((done & 0x3ffff) == 0) {
+									System.out.print(String.format("%d\r", done));
 								}
 							}
 						}
@@ -252,100 +201,6 @@ class Edge3 {
 				setPruning(eprun, i, depth);
 			}
 		}
-	}
-	
-	static void createPrun0() {
-		prun = new int[12*11*10*9*8*7*6*5*4*3/16];
-		Edge3 e = new Edge3();
-		Edge3 f = new Edge3();
-		Arrays.fill(prun, (int)-1);
-		setpruning2(0, 3);
-		int depth = 0;
-		int done = 1;
-		while (done != 239500800) {
-			int depm3 = depth % 3;
-			int depp3 = 3 ^ ((depth+1) % 3);
-			boolean inv = depth > 10;
-			int check = inv ? 3 : depm3;
-			int found = inv ? depm3 : 3;
-			for (int i=0; i<239500800; i++) {
-				if (getpruning2(i)==check) {
-					e.set(i);
-					for (int m=0; m<17; m++) {
-						int idx = getmv(e.edge, m);
-						if (getpruning2(idx) == found) {
-							done++;
-							if ((done & 0x0ffff) == 0) {
-								System.out.print(String.format("%5.2f%%\r", done / 2395008.0));
-							}								
-							if (inv) {
-								setpruning2(i, depp3);
-								break;
-							} else {
-								setpruning2(idx, depp3);
-							}
-						}
-					}
-				}
-			}
-			depth++;
-			System.out.println(String.format("%2d%10d", depth, done));
-		}
-		for (int i=0; i<12*11*10*9*8*7*6*5*4*3/5; i++) {
-			int n = 1;
-			int value = 0;
-			for (int j=0; j<4; j++) {
-				value += n * getpruning2(4*i+j);
-				n *= 3;
-			}
-			value += n * getpruning2(12*11*10*9*8*7*6*5*4*3/5*4+i);
-			prunP[i] = (byte)value;
-		}
-		prun = null;
-		System.gc();
-	}
-	
-	static void setpruning2(int index, int value) {
-		prun[index >>> 4] ^= value << ((index & 0x0f) << 1);
-	}
-	
-	static int getpruning2(int index) {
-		return ((prun[index >>> 4] >>> (((index & 0x0f) << 1))) & 3);
-	}
-	
-	static int getpruningP(int index) {
-		if (index < 12*11*10*9*8*7*6*5*4*3/5*4) {
-			int data = prunP[index >>> 2]&0x0ff;
-			return GetPacked[(data<<3) | (index & 3)];
-		} else {
-			int data = prunP[index-12*11*10*9*8*7*6*5*4*3/5*4]&0x0ff;
-			return GetPacked[(data<<3) | 4];
-		}
-	}
-	
-	static int getprun(int edge, int prun) {
-		return ptb[(prun << 2) | getpruningP(edge)];
-	}
-	
-	int getprun(int edge) {
-		int depth = 0;
-		int depm3 = getpruningP(edge);
-		while (edge!=0) {
-			if (depm3 == 0)
-				depm3 = 2;
-			else
-				depm3--;
-			set(edge);
-			for (int m=0; m<20; m++) {
-				int edgex = getmv(this.edge, m);
-				if (getpruningP(edgex)==depm3) {
-					depth++;
-					edge = edgex;
-					break;
-				}
-			}
-		}
-		return depth;
 	}
 
 	static int[] FullEdgeMap = {0, 2, 4, 6, 1, 3, 7, 5, 8, 9, 10, 11};
@@ -481,27 +336,6 @@ class Edge3 {
 		}
 		return idx;		
 	}
-
-	void setX(int idx) {
-		int s = 0;
-		edge[11] = 1;
-		edge[10] = 0;
-		for (int i=9; i>=0; i--) {
-			edge[i] = idx % (12-i);
-			s ^= edge[i];
-			idx /= (12-i);
-			for (int j=i+1; j<12; j++) {
-				if (edge[j] >= edge[i])
-					edge[j]++;
-			}
-		}
-		if ((s & 1) != 0) {
-			int temp = edge[11];
-			edge[11] = edge[10];
-			edge[10] = temp;
-		}
-	}
-
 
 	void set(int idx) {
 		long val = 0xba9876543210L;

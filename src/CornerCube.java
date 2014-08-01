@@ -15,7 +15,6 @@ class CornerCube {
 
 	private byte[] cp = {0, 1, 2, 3, 4, 5, 6, 7};
 	private byte[] co = {0, 0, 0, 0, 0, 0, 0, 0};
-//	private int cparity = 0;
 	
 	CornerCube temps = null;//new CornerCube();
 
@@ -29,7 +28,6 @@ class CornerCube {
 	CornerCube(int cperm, int twist) {
 		this.setCPerm(cperm);
 		this.setTwist(twist);
-//		cparity = getParity();
 	}
 
 	CornerCube(CornerCube c) {
@@ -41,7 +39,6 @@ class CornerCube {
 			this.cp[i] = c.cp[i];
 			this.co[i] = c.co[i];
 		}
-//		this.cparity = c.cparity;
 	}
 	
 	int getParity() {
@@ -97,7 +94,6 @@ class CornerCube {
 			temps = new CornerCube();
 		}
 		CornMult(this, moveCube[idx], temps);
-//		cparity ^= cpmv[idx];
 		copy(temps);
 	}
 

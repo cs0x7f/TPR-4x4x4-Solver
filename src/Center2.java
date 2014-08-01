@@ -169,22 +169,22 @@ class Center2 {
 	
 	void rot(int r) {
 		switch (r) {
-			case 0:
-				move(ux2);
-				move(dx2);
-				break;
-			case 1:
-				move(rx1);
-				move(lx3);
-				break;
-			case 2:
-				swap(ct, 0, 3, 1, 2, 1);
-				swap(ct, 8, 11, 9, 10, 1);
-				swap(ct, 4, 7, 5, 6, 1);
-				swap(ct, 12, 15, 13, 14, 1);
-				swap(rl, 0, 3, 5, 6, 1);
-				swap(rl, 1, 2, 4, 7, 1);
-				break;
+		case 0:
+			move(ux2);
+			move(dx2);
+			break;
+		case 1:
+			move(rx1);
+			move(lx3);
+			break;
+		case 2:
+			swap(ct, 0, 3, 1, 2, 1);
+			swap(ct, 8, 11, 9, 10, 1);
+			swap(ct, 4, 7, 5, 6, 1);
+			swap(ct, 12, 15, 13, 14, 1);
+			swap(rl, 0, 3, 5, 6, 1);
+			swap(rl, 1, 2, 4, 7, 1);
+			break;
 		}	
 	}
 
@@ -194,54 +194,54 @@ class Center2 {
 		int key = m % 3;
 		m /= 3;
 		switch (m) {
-			case 0:		//U
-				swap(ct, 0, 1, 2, 3, key);
-				break;
-			case 1:		//R
-				swap(rl, 0, 1, 2, 3, key);
-				break;
-			case 2:		//F
-				swap(ct, 8, 9, 10, 11, key);
-				break;
-			case 3:		//D
-				swap(ct, 4, 5, 6, 7, key);
-				break;
-			case 4:		//L
-				swap(rl, 4, 5, 6, 7, key);
-				break;
-			case 5:		//B
-				swap(ct, 12, 13, 14, 15, key);
-				break;
-			case 6:		//u
-				swap(ct, 0, 1, 2, 3, key);
-				swap(rl, 0, 5, 4, 1, key);
-				swap(ct, 8, 9, 12, 13, key);
-				break;
-			case 7:		//r
-				swap(rl, 0, 1, 2, 3, key);
-				swap(ct, 1, 15, 5, 9, key);
-				swap(ct, 2, 12, 6, 10, key);
-				break;
-			case 8:		//f
-				swap(ct, 8, 9, 10, 11, key);
-				swap(rl, 0, 3, 6, 5, key);
-				swap(ct, 3, 2, 5, 4, key);
-				break;
-			case 9:		//d
-				swap(ct, 4, 5, 6, 7, key);
-				swap(rl, 3, 2, 7, 6, key);
-				swap(ct, 11, 10, 15, 14, key);
-				break;
-			case 10:	//l
-				swap(rl, 4, 5, 6, 7, key);
-				swap(ct, 0, 8, 4, 14, key);
-				swap(ct, 3, 11, 7, 13, key);
-				break;
-			case 11:	//b		
-				swap(ct, 12, 13, 14, 15, key);
-				swap(rl, 1, 4, 7, 2, key);
-				swap(ct, 1, 0, 7, 6, key);
-				break;
+		case 0:		//U
+			swap(ct, 0, 1, 2, 3, key);
+			break;
+		case 1:		//R
+			swap(rl, 0, 1, 2, 3, key);
+			break;
+		case 2:		//F
+			swap(ct, 8, 9, 10, 11, key);
+			break;
+		case 3:		//D
+			swap(ct, 4, 5, 6, 7, key);
+			break;
+		case 4:		//L
+			swap(rl, 4, 5, 6, 7, key);
+			break;
+		case 5:		//B
+			swap(ct, 12, 13, 14, 15, key);
+			break;
+		case 6:		//u
+			swap(ct, 0, 1, 2, 3, key);
+			swap(rl, 0, 5, 4, 1, key);
+			swap(ct, 8, 9, 12, 13, key);
+			break;
+		case 7:		//r
+			swap(rl, 0, 1, 2, 3, key);
+			swap(ct, 1, 15, 5, 9, key);
+			swap(ct, 2, 12, 6, 10, key);
+			break;
+		case 8:		//f
+			swap(ct, 8, 9, 10, 11, key);
+			swap(rl, 0, 3, 6, 5, key);
+			swap(ct, 3, 2, 5, 4, key);
+			break;
+		case 9:		//d
+			swap(ct, 4, 5, 6, 7, key);
+			swap(rl, 3, 2, 7, 6, key);
+			swap(ct, 11, 10, 15, 14, key);
+			break;
+		case 10:	//l
+			swap(rl, 4, 5, 6, 7, key);
+			swap(ct, 0, 8, 4, 14, key);
+			swap(ct, 3, 11, 7, 13, key);
+			break;
+		case 11:	//b		
+			swap(ct, 12, 13, 14, 15, key);
+			swap(rl, 1, 4, 7, 2, key);
+			swap(ct, 1, 0, 7, 6, key);
+			break;
 		}
 	}
 }

@@ -24,25 +24,14 @@ final class Center1 {
 	static int[][] symmove = new int[48][36];
 	static int[] syminv = new int[48];
 	static int[] finish = new int[48];
-	
-	static void init() {
-		initSym();
+
+	static void initSym2Raw() {
 		Center1 c = new Center1();
-		c.set(0);
-		for (int i=0; i<48; i++) {
-			finish[syminv[i]] = c.get();
-			c.rot(0);
-			if (i%2==1) c.rot(1);
-			if (i%8==7) c.rot(2);
-			if (i%16==15) c.rot(3);
-		}
-		
 		int[] occ = new int[735471/32+1];
 		int count = 0;
 		for (int i=0; i<735471; i++) {
 			if ((occ[i>>>5]&(1<<(i&0x1f))) == 0) {
 				sym2raw[count++] = i;
-//				occ[i] = true;
 				c.set(i);
 				for (int j=0; j<48; j++) {
 					int idx = c.get();
@@ -54,8 +43,22 @@ final class Center1 {
 				}
 			}
 		}
-		occ = null;
-		System.gc();
+		assert count == 15582;		
+	}
+	
+	static void init() {
+		initSym();
+		initSym2Raw();
+
+		Center1 c = new Center1();
+		c.set(0);
+		for (int i=0; i<48; i++) {
+			finish[syminv[i]] = c.get();
+			c.rot(0);
+			if (i%2==1) c.rot(1);
+			if (i%8==7) c.rot(2);
+			if (i%16==15) c.rot(3);
+		}
 		
 		if (!read(ctsmv, 0, 15582, 36, "Center1.move")) {
 			createMoveTable();
@@ -73,18 +76,20 @@ final class Center1 {
 			int check = inv ? depth : -1;
 			depth++;
 			for (int i=0; i<15582; i++) {
-				if (csprun[i] == select) {
-					for (int m=0; m<27; m++) {
-						int idx = ctsmv[i][m] >>> 6;
-						if (csprun[idx] == check) {
-							++done;
-							if (inv) {
-								csprun[i] = (byte) depth;
-								break;
-							} else {
-								csprun[idx] = (byte) depth;
-							}
-						}
+				if (csprun[i] != select) {
+					continue;
+				}
+				for (int m=0; m<27; m++) {
+					int idx = ctsmv[i][m] >>> 6;
+					if (csprun[idx] != check) {
+						continue;
+					}
+					++done;
+					if (inv) {
+						csprun[i] = (byte) depth;
+						break;
+					} else {
+						csprun[idx] = (byte) depth;
 					}
 				}
 			}

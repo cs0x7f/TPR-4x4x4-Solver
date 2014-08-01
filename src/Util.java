@@ -41,7 +41,6 @@ class Util {
 			in.close();
 			return true;
 		} catch (IOException e) {
-			// e.printStackTrace();
 			return false;
 		}
 	}
@@ -55,34 +54,8 @@ class Util {
 			out.close();
 			return true;
 		} catch (IOException e) {
-			// e.printStackTrace();
 			return false;
 		}
-	}
-
-
-	static boolean write(byte[] data, int idx, int length, String filename) {
-		try {
-			OutputStream os = getOutput(filename);
-			os.write(data, idx, length);
-			os.close();
-			return true;
-		} catch (IOException e) {
-//			e.printStackTrace();
-			return false;
-		}	
-	}
-	
-	static boolean read(byte[] data, int idx, int length, String filename) {
-		try {
-			InputStream is = getInput(filename);
-			is.read(data, idx, length);
-			is.close();
-			return true;
-		} catch (IOException e) {
-//			e.printStackTrace();
-			return false;
-		}		
 	}
 
 	static boolean read(int[][] data, int l, int r, int width, String filename) {
@@ -98,7 +71,6 @@ class Util {
 			is.close();
 			return true;
 		} catch (IOException e) {
-//			e.printStackTrace();
 			return false;
 		}
 	}
@@ -120,7 +92,6 @@ class Util {
 			os.close();
 			return true;
 		} catch (IOException e) {
-//			e.printStackTrace();
 			return false;
 		}
 	}
@@ -209,18 +180,6 @@ class Util {
 		arr[7] = (byte)val;
 	}
 	
-	static int parity(int[] arr) {
-		int parity = 0;
-		for (int i=0, len=arr.length; i<len; i++) {
-			for (int j=i; j<len; j++) {
-				if (arr[i] > arr[j]) {
-					parity ^= 1;
-				}
-			}
-		}
-		return parity;
-	}
-	
 	static int parity(byte[] arr) {
 		int parity = 0;
 		for (int i=0, len=arr.length; i<len; i++) {
@@ -240,5 +199,4 @@ class Util {
 	static int getPruning(int[] table, int index) {
 		return (table[index >> 3] >> ((index & 7) << 2)) & 0x0f;
 	}
-
 }
