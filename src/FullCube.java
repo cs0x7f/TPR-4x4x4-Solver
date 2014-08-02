@@ -158,7 +158,6 @@ public class FullCube implements Comparable {
 		int finishSym = symmult[syminv[sym]][Center1.getSolvedSym(getCenter())];
 		
 		StringBuffer sb = new StringBuffer();
-		inverse = true;
 		sym = finishSym;
 		if (inverse) {
 			for (int i=idx-1; i>=0; i--) {
