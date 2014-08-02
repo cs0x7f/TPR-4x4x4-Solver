@@ -142,50 +142,56 @@ class Edge3 {
 				break;
 			}
 
-			for (int i=0; i<N_EPRUN; i++) {
-				if (getPruning(eprun, i) != find) {
+			for (int i_=0; i_<N_EPRUN; i_+=8) {
+				int val = eprun[i_ >> 3];
+				if (!inv && val == -1) {
 					continue;
 				}
-				int symcord1 = i / N_RAW;
-				int cord1 = sym2raw[symcord1];
-				int cord2 = i % N_RAW;
-				e.set(cord1 * N_RAW + cord2);
+				for (int i=i_, end=i_+8; i<end; i++, val>>=4) {
+					if ((val & 0xf) != find) {
+						continue;
+					}
+					int symcord1 = i / N_RAW;
+					int cord1 = sym2raw[symcord1];
+					int cord2 = i % N_RAW;
+					e.set(cord1 * N_RAW + cord2);
 
-				for (int m=0; m<17; m++) {
-					int cord1x = getmv4(e.edge, m);
-					int symcord1x = raw2sym[cord1x];
-					int symx = symcord1x & 0x7;
-					symcord1x >>= 3;
-					int cord2x = getmvrot(e.edge, m<<3|symx) % N_RAW;
-					int idx = symcord1x * N_RAW + cord2x;
-					if (getPruning(eprun, idx) != chk) {
-						continue;
-					}
-					setPruning(eprun, inv ? i : idx, depth + 1);
-					done++;
-					if ((done & 0x3ffff) == 0) {
-						System.out.print(String.format("%d\r", done));
-					}
-					if (inv) {
-						break;
-					}
-					char symState = symstate[symcord1x];
-					if (symState == 1){
-						continue;
-					}
-					f.set(e);
-					f.move(m);
-					f.rotate(symx);
-					for (int j=1; (symState >>= 1) != 0; j++) {
-						if ((symState & 1) == 1) {
-							g.set(f);
-							g.rotate(j);
-							int idxx = symcord1x * N_RAW + g.get() % N_RAW;
-							if (getPruning(eprun, idxx) == chk) {
-								setPruning(eprun, idxx, depth + 1);
-								done++;
-								if ((done & 0x3ffff) == 0) {
-									System.out.print(String.format("%d\r", done));
+					for (int m=0; m<17; m++) {
+						int cord1x = getmv4(e.edge, m);
+						int symcord1x = raw2sym[cord1x];
+						int symx = symcord1x & 0x7;
+						symcord1x >>= 3;
+						int cord2x = getmvrot(e.edge, m<<3|symx) % N_RAW;
+						int idx = symcord1x * N_RAW + cord2x;
+						if (getPruning(eprun, idx) != chk) {
+							continue;
+						}
+						setPruning(eprun, inv ? i : idx, depth + 1);
+						done++;
+						if ((done & 0x3ffff) == 0) {
+							System.out.print(String.format("%d\r", done));
+						}
+						if (inv) {
+							break;
+						}
+						char symState = symstate[symcord1x];
+						if (symState == 1){
+							continue;
+						}
+						f.set(e);
+						f.move(m);
+						f.rotate(symx);
+						for (int j=1; (symState >>= 1) != 0; j++) {
+							if ((symState & 1) == 1) {
+								g.set(f);
+								g.rotate(j);
+								int idxx = symcord1x * N_RAW + g.get() % N_RAW;
+								if (getPruning(eprun, idxx) == chk) {
+									setPruning(eprun, idxx, depth + 1);
+									done++;
+									if ((done & 0x3ffff) == 0) {
+										System.out.print(String.format("%d\r", done));
+									}
 								}
 							}
 						}
