@@ -24,6 +24,7 @@ class Edge3 {
 	static final int N_SYM = 1538;
 	static final int N_RAW = 20160;
 	static final int N_EPRUN = N_SYM * N_RAW;
+	static final int MAX_DEPTH = 11;
 	static int[] eprun = new int[N_EPRUN / 8];
 
 	static int[] sym2raw = new int[N_SYM];
@@ -138,7 +139,7 @@ class Edge3 {
 			int find = inv ? 0xf : depth;
 			int chk = inv ? depth : 0xf;
 
-			if (inv) {
+			if (depth >= MAX_DEPTH - 1) {
 				break;
 			}
 
@@ -200,12 +201,6 @@ class Edge3 {
 			}
 			depth++;
 			System.out.println(String.format("%2d%10d", depth, done));
-		}
-		depth++;
-		for (int i=0; i<N_EPRUN; i++) {
-			if (getPruning(eprun, i) == 0xf) {
-				setPruning(eprun, i, depth);
-			}
 		}
 	}
 

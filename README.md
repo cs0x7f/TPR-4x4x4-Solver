@@ -25,7 +25,7 @@ TPR-4x4x4-Solver
  - 47  32
 
 # Note
- - At its first executing, about 20M's tables will be generated and written to disk (md5(Center1.move) = 00422716ab2ab91472f55fc5a524bef5, md5(Edge3.prunS) = 5fab4b768165375124eaf83e1a884c89). 
+ - At its first executing, about 20M's tables will be generated and written to disk (md5(Center1.move) = 00422716ab2ab91472f55fc5a524bef5, md5(Edge3.prunS) = c2dccd039e827843ca0584c5430e1141). 
 
 # Algorithm
  - [Tsai's 8-step 4x4x4 algorithm](http://cubezzz.dyndns.org/drupal/?q=node/view/73#comment-2588)
