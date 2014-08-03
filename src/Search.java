@@ -273,12 +273,12 @@ public class Search implements Runnable {
 					int eparity = e12.set(arr2[i].getEdge());
 					ct3.set(arr2[i].getCenter(), eparity ^ arr2[i].getCorner().getParity());
 					int ct = ct3.getct();
-					int edge = e12.get();
-					int prun = Math.min(Util.getPruning(Edge3.eprun, e12.getsym()), Edge3.MAX_DEPTH);
+					int edge = e12.get(10);
+					int prun = Edge3.getprun(e12.getsym());
 					int lm = 20;
 
 					if (prun <= length123 - arr2[i].length1 - arr2[i].length2 
-							&& search3(edge, ct, length123 - arr2[i].length1 - arr2[i].length2, lm, 0)) {
+							&& search3(edge, ct, prun, length123 - arr2[i].length1 - arr2[i].length2, lm, 0)) {
 						solcnt++;
 	//					System.out.println(length123 + " " + solcnt);
 	//					if (solcnt == 5) {
@@ -451,8 +451,8 @@ public class Search implements Runnable {
 		int eparity = e12.set(c2.getEdge());
 		ct3.set(c2.getCenter(), eparity ^ c2.getCorner().getParity());
 		int ct = ct3.getct();
-		int edge = e12.get();
-		int prun = Math.min(Util.getPruning(Edge3.eprun, e12.getsym()), Edge3.MAX_DEPTH);
+		int edge = e12.get(10);
+		int prun = Edge3.getprun(e12.getsym());
 
 		if (arr2[arr2idx] == null) {
 			arr2[arr2idx] = new FullCube(c2);
@@ -466,7 +466,7 @@ public class Search implements Runnable {
 		return arr2idx == arr2.length;
 	}
 
-	public boolean search3(int edge, int ct, int maxl, int lm, int depth) {
+	public boolean search3(int edge, int ct, int prun, int maxl, int lm, int depth) {
 		if (maxl == 0) {
 			return edge == 0 && ct == 0;
 		}
@@ -492,7 +492,7 @@ public class Search implements Runnable {
 			symcord1x >>= 3;
 			int cord2x = Edge3.getmvrot(tempe[depth].edge, m<<3|symx) % Edge3.N_RAW;
 
-			int prunx = Math.min(Util.getPruning(Edge3.eprun, symcord1x * Edge3.N_RAW + cord2x), Edge3.MAX_DEPTH);
+			int prunx = Edge3.getprun(symcord1x * Edge3.N_RAW + cord2x, prun);
 			if (prunx >= maxl) {
 				if (prunx > maxl && m < 14) {
 					m = skipAxis3[m];
@@ -500,7 +500,7 @@ public class Search implements Runnable {
 				continue;
 			}
 
-			if (search3(edgex, ctx, maxl - 1, m, depth + 1)) {
+			if (search3(edgex, ctx, prunx, maxl - 1, m, depth + 1)) {
 				move3[depth] = m;
 				return true;
 			}

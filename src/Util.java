@@ -191,12 +191,4 @@ class Util {
 		}
 		return parity;
 	}
-
-	static void setPruning(int[] table, int index, int value) {
-		table[index >> 3] ^= (0x0f ^ value) << ((index & 7) << 2);
-	}
-
-	static int getPruning(int[] table, int index) {
-		return (table[index >> 3] >> ((index & 7) << 2)) & 0x0f;
-	}
 }
