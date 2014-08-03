@@ -25,6 +25,7 @@ class Edge3 {
 	static final int N_RAW = 20160;
 	static final int N_EPRUN = N_SYM * N_RAW;
 	static final int MAX_DEPTH = 11;
+	
 	static int[] eprun = new int[N_EPRUN / 8];
 
 	static int[] sym2raw = new int[N_SYM];
@@ -40,25 +41,11 @@ class Edge3 {
 
 	static int[][] mvrot = new int[20 * 8][12];
 	static int[][] mvroto = new int[20 * 8][12];
-	static int[][] edgex = new int[20][12];
-	static int[][] edgeox = new int[20][12];
 	
-	private static int[] fact = {19958400, 1814400, 181440, 20160, 2520, 360, 60, 12, 3, 1};
 	static int[] factX = {1, 1, 2/2, 6/2, 24/2, 120/2, 720/2, 5040/2, 40320/2, 362880/2, 3628800/2, 39916800/2, 479001600/2};
 
-	static void initEdgex() {
+	static void initMvrot() {
 		Edge3 e = new Edge3();
-		for (int m=0; m<20; m++) {
-			e.set(0);
-			e.move(m);
-			for (int i=0; i<12; i++) {
-				edgex[m][i] = e.edge[i];
-			}
-			e.get();
-			for (int i=0; i<12; i++) {
-				edgeox[m][i] = e.temp[i];
-			}
-		}
 
 		for (int m=0; m<20; m++) {
 			for (int r=0; r<8; r++) {
@@ -103,7 +90,7 @@ class Edge3 {
 	}
 	
 	static void init() {
-		initEdgex();
+		initMvrot();
 		initRaw2Sym();
 
 		if (!read(eprun, 0, eprun.length, "Edge3.prunS")) {
@@ -169,9 +156,9 @@ class Edge3 {
 						}
 						setPruning(eprun, inv ? i : idx, depth + 1);
 						done++;
-						if ((done & 0x3ffff) == 0) {
-							System.out.print(String.format("%d\r", done));
-						}
+						// if ((done & 0x3ffff) == 0) {
+						// 	System.out.print(String.format("%d\r", done));
+						// }
 						if (inv) {
 							break;
 						}
@@ -190,9 +177,9 @@ class Edge3 {
 								if (getPruning(eprun, idxx) == chk) {
 									setPruning(eprun, idxx, depth + 1);
 									done++;
-									if ((done & 0x3ffff) == 0) {
-										System.out.print(String.format("%d\r", done));
-									}
+									// if ((done & 0x3ffff) == 0) {
+									// 	System.out.print(String.format("%d\r", done));
+									// }
 								}
 							}
 						}
@@ -251,8 +238,8 @@ class Edge3 {
 	}
 
 	static int getmv(int[] ep, int mv) {
-		int[] movo = edgeox[mv];
-		int[] mov = edgex[mv];
+		int[] movo = mvroto[mv<<3];
+		int[] mov = mvrot[mv<<3];
 		int idx = 0;
 		long val = 0xba9876543210L;
 		for (int i=0; i<10; i++) {
@@ -265,8 +252,8 @@ class Edge3 {
 	}
 
 	static int getmv4(int[] ep, int mv) {
-		int[] movo = edgeox[mv];
-		int[] mov = edgex[mv];
+		int[] movo = mvroto[mv<<3];
+		int[] mov = mvrot[mv<<3];
 		int idx = 0;
 		long val = 0xba9876543210L;
 		for (int i=0; i<4; i++) {
