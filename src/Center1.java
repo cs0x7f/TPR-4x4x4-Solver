@@ -37,7 +37,9 @@ final class Center1 {
 				for (int j=0; j<48; j++) {
 					int idx = c.get();
 					occ[idx>>>5] |= (1<<(idx&0x1f));
-					raw2sym[idx] = count << 6 | syminv[j];
+					if (raw2sym != null) {
+						raw2sym[idx] = count << 6 | syminv[j];
+					}
 					c.rot(0);
 					if (j%2==1) c.rot(1);
 					if (j%8==7) c.rot(2);
@@ -48,30 +50,8 @@ final class Center1 {
 		}
 		assert count == 15582;		
 	}
-	
-	static void init() {
-		initSym();
 
- 		raw2sym = new int[735471];
-		initSym2Raw();
-
-		Center1 c = new Center1();
-		c.set(0);
-		for (int i=0; i<48; i++) {
-			finish[syminv[i]] = c.get();
-			c.rot(0);
-			if (i%2==1) c.rot(1);
-			if (i%8==7) c.rot(2);
-			if (i%16==15) c.rot(3);
-		}
-		
-		if (!read(ctsmv, 0, 15582, 36, "Center1.move")) {
-			createMoveTable();
-			write(ctsmv, 0, 15582, 36, "Center1.move");
-		}
-
-		raw2sym = null;
-		
+	static void createPrun() {
 		Arrays.fill(csprun, (byte)-1);
 		csprun[0] = 0;
 		int depth = 0;
@@ -102,6 +82,7 @@ final class Center1 {
 			}
 //			System.out.println(String.format("%2d%10d", depth, done));
 		}
+
 	}
 
 	static void createMoveTable() {
@@ -396,6 +377,15 @@ final class Center1 {
 					}
 				}
 			}
-		}		
+		}
+
+		c.set(0);
+		for (int i=0; i<48; i++) {
+			finish[syminv[i]] = c.get();
+			c.rot(0);
+			if (i%2==1) c.rot(1);
+			if (i%8==7) c.rot(2);
+			if (i%16==15) c.rot(3);
+		}
 	}	
 }

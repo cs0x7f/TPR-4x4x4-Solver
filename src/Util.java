@@ -1,4 +1,5 @@
 package cs.threephase;
+import static cs.threephase.Moves.*;
 
 import java.io.*;
 
@@ -23,77 +24,52 @@ class Util {
 			fact[i+1] = fact[i] * (i+1);
 		}
 	}
-	
-	static OutputStream getOutput(String filename) throws IOException {
-		return new BufferedOutputStream(new FileOutputStream(filename));
-	}
-	
-	static InputStream getInput(String filename) throws IOException {
-		return new BufferedInputStream(new FileInputStream(filename));
-	}
-	
-	static boolean read(int[] arr, int idx, int length, String filename) {
-		try {
-			DataInputStream in = new DataInputStream(getInput(filename));
-			for (int i=idx, len=idx+length; i<len; i++) {
-				arr[i] = in.readInt();
-			}
-			in.close();
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
-	}
 
-	static boolean write(int[] arr, int idx, int length, String filename) {
-		try {
-			DataOutputStream out = new DataOutputStream(getOutput(filename));
-			for (int i=idx, len=idx+length; i<len; i++) {
-				out.writeInt(arr[i]);
+	public static int[] tomove(String s) {
+		s = s.replaceAll("\\s", "");
+		int[] arr = new int[s.length()];
+		int j = 0;
+		for (int i=0, length=s.length(); i<length; i++) {
+			int axis = -1;
+			switch (s.charAt(i)) {
+			case 'U':	axis = 0;	break;
+			case 'R':	axis = 1;	break;
+			case 'F':	axis = 2;	break;
+			case 'D':	axis = 3;	break;
+			case 'L':	axis = 4;	break;
+			case 'B':	axis = 5;	break;
+			case 'u':	axis = 6;	break;
+			case 'r':	axis = 7;	break;
+			case 'f':	axis = 8;	break;
+			case 'd':	axis = 9;	break;
+			case 'l':	axis = 10;	break;
+			case 'b':	axis = 11;	break;
+			default:	continue;
 			}
-			out.close();
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
-	}
-
-	static boolean read(int[][] data, int l, int r, int width, String filename) {
-		try {
-			InputStream is = getInput(filename);
-			byte[] buf = new byte[width * 4];
-			for (int i=l; i<r; i++) {
-				is.read(buf);
-				for (int j=0; j<width; j++) {
-					data[i][j] = (buf[j*4])&0xff | (buf[j*4+1]<<8)&0xff00 | (buf[j*4+2]<<16)&0xff0000 | (buf[j*4+3]<<24)&0xff000000;
+			axis *= 3;
+			if (++i<length) {
+				switch (s.charAt(i)) {
+				case '2':	axis++;		break;
+				case '\'':	axis+=2;	break;
+				default:	--i;
 				}
 			}
-			is.close();
-			return true;
-		} catch (IOException e) {
-			return false;
+			arr[j++] = axis;
 		}
+
+		int[] ret = new int[j];
+		while (--j>=0) {
+			ret[j] = arr[j];
+		}
+		return ret;
 	}
-	
-	static boolean write(int[][] data, int l, int r, int width, String filename) {
-		try {
-			OutputStream os = getOutput(filename);
-			byte[] buf = new byte[width * 4];
-			for (int i=l; i<r; i++) {
-				int idx = 0;
-				for (int j=0; j<width; j++) {
-					buf[idx++] = (byte)(data[i][j] & 0xff);
-					buf[idx++] = (byte)((data[i][j]>>>8) & 0xff);
-					buf[idx++] = (byte)((data[i][j]>>>16) & 0xff);
-					buf[idx++] = (byte)((data[i][j]>>>24) & 0xff);
-				}
-				os.write(buf);
-			}
-			os.close();
-			return true;
-		} catch (IOException e) {
-			return false;
+
+	public static String tostr(int[] moves) {
+		StringBuilder s = new StringBuilder();
+		for (int m: moves) {
+			s.append(move2str[m]).append(' ');
 		}
+		return s.toString();
 	}
 
 	public static void swap(int[] arr, int a, int b, int c, int d, int key) {
@@ -151,21 +127,7 @@ class Util {
 			return;
 		}
 	}
-	
-	static void set8Perm(int[] arr, int idx) {
-		int val = 0x76543210;
-		for (int i=0; i<7; i++) {
-			int p = fact[7-i];
-			int v = idx / p;
-			idx -= v*p;
-			v <<= 2;
-			arr[i] = (val >> v) & 0xf;
-			int m = (1 << v) - 1;
-			val = (val & m) + ((val >> 4) & ~m);
-		}
-		arr[7] = val;
-	}
-	
+		
 	static void set8Perm(byte[] arr, int idx) {
 		int val = 0x76543210;
 		for (int i=0; i<7; i++) {

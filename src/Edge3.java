@@ -88,16 +88,6 @@ class Edge3 {
 		assert count == 1538;
 	}
 	
-	static void init() {
-		initMvrot();
-		initRaw2Sym();
-
-		if (!read(eprun, 0, eprun.length, "Edge3.prunSP")) {
-			createPrun();
-			write(eprun, 0, eprun.length, "Edge3.prunSP");
-		}
-	}
-
 	static void setPruning(int[] table, int index, int value) {
 		table[index >> 4] ^= (0x3 ^ value) << ((index & 0xf) << 1);
 	}
