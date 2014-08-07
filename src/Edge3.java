@@ -19,6 +19,7 @@ import static cs.threephase.Util.*;
  */
 
 class Edge3 {
+	static final boolean IS_64BIT_PLATFORM = true;
 
 	static final int N_SYM = 1538;
 	static final int N_RAW = 20160;
@@ -133,11 +134,11 @@ class Edge3 {
 			e.set(cord1 * N_RAW + cord2);
 
 			for (int m=0; m<17; m++) {
-				int cord1x = getmv4(e.edge, m);
+				int cord1x = getmvrot(e.edge, m<<3, 4);
 				int symcord1x = raw2sym[cord1x];
 				int symx = symcord1x & 0x7;
 				symcord1x >>= 3;
-				int cord2x = getmvrot(e.edge, m<<3|symx) % N_RAW;
+				int cord2x = getmvrot(e.edge, m<<3|symx, 10) % N_RAW;
 				int idx = symcord1x * N_RAW + cord2x;
 				if (getPruning(eprun, idx) == depm3) {
 					depth++;
@@ -185,11 +186,11 @@ class Edge3 {
 					e.set(cord1 * N_RAW + cord2);
 
 					for (int m=0; m<17; m++) {
-						int cord1x = getmv4(e.edge, m);
+						int cord1x = getmvrot(e.edge, m<<3, 4);
 						int symcord1x = raw2sym[cord1x];
 						int symx = symcord1x & 0x7;
 						symcord1x >>= 3;
-						int cord2x = getmvrot(e.edge, m<<3|symx) % N_RAW;
+						int cord2x = getmvrot(e.edge, m<<3|symx, 10) % N_RAW;
 						int idx = symcord1x * N_RAW + cord2x;
 						if (getPruning(eprun, idx) != chk) {
 							continue;
@@ -228,7 +229,7 @@ class Edge3 {
 				}
 			}
 			depth++;
-			System.out.println(String.format("%2d%10d", depth, done));
+			System.out.println(depth + "\t" + done);
 		}
 	}
 
@@ -278,44 +279,34 @@ class Edge3 {
 		isStd = e.isStd;
 	}
 
-	static int getmv(int[] ep, int mv) {
-		int[] movo = mvroto[mv<<3];
-		int[] mov = mvrot[mv<<3];
-		int idx = 0;
-		long val = 0xba9876543210L;
-		for (int i=0; i<10; i++) {
-			int v = movo[ep[mov[i]]] << 2;
-			idx *= 12 - i;
-			idx += (val >> v) & 0xf;
-			val -= 0x111111111110L << v;
-		}
-		return idx;	
-	}
-
-	static int getmv4(int[] ep, int mv) {
-		int[] movo = mvroto[mv<<3];
-		int[] mov = mvrot[mv<<3];
-		int idx = 0;
-		long val = 0xba9876543210L;
-		for (int i=0; i<4; i++) {
-			int v = movo[ep[mov[i]]] << 2;
-			idx *= 12 - i;
-			idx += (val >> v) & 0xf;
-			val -= 0x111111111110L << v;
-		}
-		return idx;	
-	}
-
-	static int getmvrot(int[] ep, int mrIdx) {
+	static int getmvrot(int[] ep, int mrIdx, int end) {
 		int[] movo = mvroto[mrIdx];
 		int[] mov = mvrot[mrIdx];
 		int idx = 0;
-		long val = 0xba9876543210L;
-		for (int i=0; i<10; i++) {
-			int v = movo[ep[mov[i]]] << 2;
-			idx *= 12 - i;
-			idx += (val >> v) & 0xf;
-			val -= 0x111111111110L << v;
+
+		if (IS_64BIT_PLATFORM) {
+			long val = 0xba9876543210L;
+			for (int i=0; i<end; i++) {
+				int v = movo[ep[mov[i]]] << 2;
+				idx *= 12 - i;
+				idx += (val >> v) & 0xf;
+				val -= 0x111111111110L << v;
+			}
+		} else {	//long is not as fast as expected
+			int vall = 0x76543210;
+			int valh = 0xba98;
+			for (int i=0; i<end; i++) {
+				int v = movo[ep[mov[i]]] << 2;
+				idx *= 12 - i;
+				if (v >= 32) {
+					idx += (valh >> (v - 32)) & 0xf;
+					valh -= 0x1110 << (v - 32);
+				} else {
+					idx += (vall >> v) & 0xf;
+					valh -= 0x1111;
+					vall -= 0x11111110 << v;
+				}
+			}
 		}
 		return idx;	
 

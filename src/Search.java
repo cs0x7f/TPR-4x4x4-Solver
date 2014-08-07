@@ -484,13 +484,13 @@ public class Search implements Runnable {
 				}
 				continue;
 			}
-			int edgex = Edge3.getmv(tempe[depth].edge, m);
+			int edgex = Edge3.getmvrot(tempe[depth].edge, m<<3, 10);
 
 			int cord1x = edgex / Edge3.N_RAW;
 			int symcord1x = Edge3.raw2sym[cord1x];
 			int symx = symcord1x & 0x7;
 			symcord1x >>= 3;
-			int cord2x = Edge3.getmvrot(tempe[depth].edge, m<<3|symx) % Edge3.N_RAW;
+			int cord2x = Edge3.getmvrot(tempe[depth].edge, m<<3|symx, 10) % Edge3.N_RAW;
 
 			int prunx = Edge3.getprun(symcord1x * Edge3.N_RAW + cord2x, prun);
 			if (prunx >= maxl) {
