@@ -16,13 +16,13 @@ import java.util.*;
 
 public class Search {
 	static final int PHASE1_SOLUTIONS = 10000;
-	static final int PHASE2_ATTEMPS = 500;
+	static final int PHASE2_ATTEMPTS = 500;
 	static final int PHASE2_SOLUTIONS = 100;
-	static final int PHASE3_ATTEMPS = 100;
+	static final int PHASE3_ATTEMPTS = 100;
 
 	static boolean inited = false;
 
-	PriorityQueue<FullCube> p1sols = new PriorityQueue<FullCube>(PHASE2_ATTEMPS, new FullCube.ValueComparator());
+	PriorityQueue<FullCube> p1sols = new PriorityQueue<FullCube>(PHASE2_ATTEMPTS, new FullCube.ValueComparator());
 
 	static int[] count = new int[1];
 
@@ -50,7 +50,7 @@ public class Search {
 	FullCube[] arr2 = new FullCube[PHASE2_SOLUTIONS];
 	int arr2idx = 0;	
 
-	public boolean inverse_solution = false;
+	public boolean inverse_solution = true;
 	public boolean with_rotation = false;	
 
 	public Search() {
@@ -140,8 +140,6 @@ public class Search {
 		arr2idx = 0;
 		p1sols.clear();
 
-		long time = System.nanoTime();
-
 		for (length1=Math.min(Math.min(udprun, fbprun), rlprun); length1<100; length1++) {
 			if (rlprun <= length1 && search1(rl>>>6, rl&0x3f, length1, -1, 0) 
 					|| udprun <= length1 && search1(ud>>>6, ud&0x3f, length1, -1, 0)
@@ -188,7 +186,7 @@ public class Search {
 		do {
 			OUT2:
 			for (length123=arr2[0].value; length123<100; length123++) {
-				for (int i=0; i<Math.min(arr2idx, PHASE3_ATTEMPS); i++) {
+				for (int i=0; i<Math.min(arr2idx, PHASE3_ATTEMPTS); i++) {
 					if (arr2[i].value > length123) {
 						break;
 					}
@@ -321,7 +319,7 @@ public class Search {
 		p1SolsCnt++;
 
 		FullCube next;
-		if (p1sols.size() < PHASE2_ATTEMPS) {
+		if (p1sols.size() < PHASE2_ATTEMPTS) {
 			next = new FullCube(c1);
 		} else {
 			next = p1sols.poll();

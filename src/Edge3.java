@@ -18,13 +18,15 @@ import static cs.threephase.Util.*;
 					2	14	
  */
 
-class Edge3 {
-	static final boolean IS_64BIT_PLATFORM = true;
+public class Edge3 {
+	static final boolean IS_64BIT_PLATFORM = false;
 
 	static final int N_SYM = 1538;
 	static final int N_RAW = 20160;
 	static final int N_EPRUN = N_SYM * N_RAW;
-	static final int MAX_DEPTH = 11;
+	static final int MAX_DEPTH = 10;
+
+	static final int[] prunValues = {1, 4, 16, 55, 324, 1922, 12275, 77640, 485359, 2778197, 11742425, 27492416, 31002941, 31006080};
 	
 	static int[] eprun = new int[N_EPRUN / 16];
 
@@ -43,6 +45,12 @@ class Edge3 {
 	static int[][] mvroto = new int[20*8][12];
 	
 	static int[] factX = {1, 1, 2/2, 6/2, 24/2, 120/2, 720/2, 5040/2, 40320/2, 362880/2, 3628800/2, 39916800/2, 479001600/2};
+
+	static int done = 0;
+
+	public static double initStatus() {
+		return done * 1.0 / prunValues[MAX_DEPTH - 1];
+	}
 
 	static void initMvrot() {
 		Edge3 e = new Edge3();
@@ -147,7 +155,7 @@ class Edge3 {
 
 		Arrays.fill(eprun, -1);
 		int depth = 0;
-		int done = 1;
+		done = 1;
 		setPruning(eprun, 0, 0);
 
 		while (done != N_EPRUN) {
