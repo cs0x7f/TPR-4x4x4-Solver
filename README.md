@@ -9,6 +9,7 @@ TPR-4x4x4-Solver
 
 # Performance
  - Command: "java -cp .:threephase.jar:twophase.jar test 2000"
+ - GUI demo: "java -cp .:threephase.jar:twophase.jar ui.MainProgram"
  - Processor: Intel Core i7 2670QM
  - Average solution length: 44.39 moves(face turn metric).
  - Average solving time: 250 ms.
