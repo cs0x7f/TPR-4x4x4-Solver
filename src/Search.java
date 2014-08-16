@@ -112,6 +112,16 @@ public class Search {
 		return solution;
 	}
 
+	public String solution(String facelet) {
+		byte[] f = new byte[96];
+		for (int i=0; i<96; i++) {
+			f[i] = (byte) "URFDLB".indexOf(facelet.charAt(i));
+		}
+		c = new FullCube(f);
+		doSearch();
+		return solution;
+	}
+
 	public String solve(String scramble) {
 		int[] moveseq = tomove(scramble);
 		return solve(moveseq);
