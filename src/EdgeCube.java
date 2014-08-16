@@ -64,7 +64,7 @@ class EdgeCube {
 
 	void fill333Facelet(char[] facelet) {
 		for (int i=0; i<24; i++) {
-			facelet[EdgeMap[i]] = colorMap4to3[EdgeColor[ep[i] % 12][ep[i] / 12]];
+			facelet[EdgeMap[i]] = "URFDLB".charAt(EdgeColor[ep[i] % 12][ep[i] / 12]);
 		}
 	}
 	

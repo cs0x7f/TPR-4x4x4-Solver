@@ -98,19 +98,9 @@ class Center2 {
 	
 	}
 	
-	Center2(CenterCube c) {
-		this();
-		for (int i=0; i<16; i++) {
-			ct[i] = c.ct[i] / 2;
-		}
-		for (int i=0; i<8; i++) {
-			rl[i] = c.ct[i+16];
-		}
-	}
-	
 	void set(CenterCube c, int edgeParity) {
 		for (int i=0; i<16; i++) {
-			ct[i] = c.ct[i] / 2;
+			ct[i] = c.ct[i] % 3;
 		}
 		for (int i=0; i<8; i++) {
 			rl[i] = c.ct[i+16];

@@ -12,7 +12,6 @@ import static cs.threephase.Center1.csprun;
 import static cs.threephase.Center1.symmove;
 
 import java.util.*;
-// import java.io.*;
 
 public class Search {
 	static final int PHASE1_SOLUTIONS = 10000;
@@ -48,10 +47,10 @@ public class Search {
 
 	int p1SolsCnt = 0;
 	FullCube[] arr2 = new FullCube[PHASE2_SOLUTIONS];
-	int arr2idx = 0;	
+	int arr2idx = 0;
 
-	public boolean inverse_solution = true;
-	public boolean with_rotation = false;	
+	public boolean inverse_solution = false;
+	public boolean with_rotation = true;
 
 	public Search() {
 		for (int i=0; i<20; i++) {
@@ -88,9 +87,9 @@ public class Search {
 		Edge3.initRaw2Sym();
 		Edge3.createPrun();
 
-		System.out.println("OK");		
+		System.out.println("OK");
 
-		inited = true;	
+		inited = true;
 	}
 
 	public String randomMove(Random r) {
@@ -121,7 +120,7 @@ public class Search {
 	public String solve(int[] moveseq) {
 		c = new FullCube(moveseq);
 		doSearch();
-		return solution;	
+		return solution;
 	}
 
 	int totlen = 0;
@@ -177,7 +176,6 @@ public class Search {
 			}
 			MAX_LENGTH2++;
 		} while (length12 == 100);
-
 		Arrays.sort(arr2, 0, arr2idx);
 		int length123, index = 0;
 		int solcnt = 0;
@@ -203,7 +201,6 @@ public class Search {
 					if (prun <= length123 - arr2[i].length1 - arr2[i].length2 
 							&& search3(edge, ct, prun, length123 - arr2[i].length1 - arr2[i].length2, lm, 0)) {
 						solcnt++;
-	//					System.out.println(length123 + " " + solcnt);
 	//					if (solcnt == 5) {
 							index = i;
 							break OUT2;
@@ -231,6 +228,8 @@ public class Search {
 		int len333 = sol.length() / 3;
 		if (sol.startsWith("Error")) {
 			System.out.println(sol);
+			System.out.println(solcube);
+			System.out.println(facelet);
 			throw new RuntimeException();
 		}
 		int[] sol333 = tomove(sol);
@@ -238,10 +237,7 @@ public class Search {
 			solcube.move(sol333[i]);
 		}
 
-		StringBuffer str = new StringBuffer();
-		str.append(solcube.getMoveString(inverse_solution, with_rotation));
-
-		solution = str.toString();
+		solution = solcube.getMoveString(inverse_solution, with_rotation);
 
 		totlen = length1 + length2 + length + len333;
 	}
@@ -252,7 +248,7 @@ public class Search {
 	}
 
 	boolean search1(int ct, int sym, int maxl, int lm, int depth) {
-		if (ct==0) {
+		if (ct==0 && maxl < 5) {
 			return maxl == 0 && init2(sym, lm);
 		}
 		for (int axis=0; axis<27; axis+=3) {
@@ -333,7 +329,7 @@ public class Search {
 	}
 
 	boolean search2(int ct, int rl, int maxl, int lm, int depth) {
-		if (ct==0 && ctprun[rl] == 0) {
+		if (ct==0 && ctprun[rl] == 0 && maxl == 0) {
 			return maxl == 0 && init3();
 		}
 		for (int m=0; m<23; m++) {

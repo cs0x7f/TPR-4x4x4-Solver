@@ -7,7 +7,6 @@ class Util {
 
 	static int[][] Cnk = new int[25][25];
 	static int[] fact = new int[13];
-	static char[] colorMap4to3 = {'U', 'D', 'F', 'B', 'R', 'L'};
 
 	static {
 		for (int i=0; i<25; i++) {
@@ -26,37 +25,36 @@ class Util {
 	}
 
 	public static int[] tomove(String s) {
-		s = s.replaceAll("\\s", "");
 		int[] arr = new int[s.length()];
 		int j = 0;
+		int axis = -1;
 		for (int i=0, length=s.length(); i<length; i++) {
-			int axis = -1;
 			switch (s.charAt(i)) {
 			case 'U':	axis = 0;	break;
-			case 'R':	axis = 1;	break;
-			case 'F':	axis = 2;	break;
-			case 'D':	axis = 3;	break;
-			case 'L':	axis = 4;	break;
-			case 'B':	axis = 5;	break;
-			case 'u':	axis = 6;	break;
-			case 'r':	axis = 7;	break;
-			case 'f':	axis = 8;	break;
-			case 'd':	axis = 9;	break;
-			case 'l':	axis = 10;	break;
-			case 'b':	axis = 11;	break;
+			case 'R':	axis = 3;	break;
+			case 'F':	axis = 6;	break;
+			case 'D':	axis = 9;	break;
+			case 'L':	axis = 12;	break;
+			case 'B':	axis = 15;	break;
+			case 'u':	axis = 18;	break;
+			case 'r':	axis = 21;	break;
+			case 'f':	axis = 24;	break;
+			case 'd':	axis = 27;	break;
+			case 'l':	axis = 30;	break;
+			case 'b':	axis = 33;	break;
+			case ' ':	if (axis != -1)	{
+							arr[j++] = axis;
+						}
+						axis = -1;
+						break;
+			case '2':	axis++;	break;
+			case '\'':	axis+=2; break;
+			case 'w':	axis+=18;	break;
 			default:	continue;
 			}
-			axis *= 3;
-			if (++i<length) {
-				switch (s.charAt(i)) {
-				case '2':	axis++;		break;
-				case '\'':	axis+=2;	break;
-				default:	--i;
-				}
-			}
-			arr[j++] = axis;
-		}
 
+		}
+		if (axis != -1) arr[j++] = axis;
 		int[] ret = new int[j];
 		while (--j>=0) {
 			ret[j] = arr[j];
@@ -99,7 +97,7 @@ class Util {
 			return;
 		}
 	}
-	
+
 	public static void swap(byte[] arr, int a, int b, int c, int d, int key) {
 		byte temp;
 		switch (key) {
@@ -127,7 +125,7 @@ class Util {
 			return;
 		}
 	}
-		
+
 	static void set8Perm(byte[] arr, int idx) {
 		int val = 0x76543210;
 		for (int i=0; i<7; i++) {

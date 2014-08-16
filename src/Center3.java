@@ -68,11 +68,11 @@ class Center3 {
 	}
 	
 	void set(CenterCube c, int eXc_parity) {
-		int parity = (c.ct[0]>c.ct[8] ^ c.ct[8]>c.ct[16] ^ c.ct[0]>c.ct[16]) ? 1 : 0;
+		int parity = (c.ct[0]%3>c.ct[8]%3 ^ c.ct[8]%3>c.ct[16]%3 ^ c.ct[0]%3>c.ct[16]%3) ? 0 : 1;
 		for (int i=0; i<8; i++) {
-			ud[i] = (c.ct[i] & 1) ^ 1;
-			fb[i] = (c.ct[i+8] & 1) ^ 1;
-			rl[i] = (c.ct[i+16] & 1) ^ 1 ^ parity;
+			ud[i] = (c.ct[i] / 3) ^ 1;
+			fb[i] = (c.ct[i+8] / 3) ^ 1;
+			rl[i] = (c.ct[i+16] / 3) ^ 1 ^ parity;
 		}
 		this.parity = parity ^ eXc_parity;
 	}

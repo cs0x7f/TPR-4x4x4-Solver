@@ -10,7 +10,7 @@ class CenterCube {
 
 	CenterCube() {
 		for (int i=0; i<24; i++) {
-			ct[i] = (byte) (i / 4);
+			ct[i] = (byte) (FullCube.centerFacelet[i] / 16);
 		}
 	}
 
@@ -60,7 +60,7 @@ class CenterCube {
 			if (ct[idx] != ct[idx+1] || ct[idx+1] != ct[idx+2] || ct[idx+2] != ct[idx+3]) {
 				throw new RuntimeException("Unsolved Center");
 			}
-			facelet[firstIdx + i * inc] = Util.colorMap4to3[ct[idx]];
+			facelet[firstIdx + i * inc] = "URFDLB".charAt(ct[idx]);
 		}
 	}
 
