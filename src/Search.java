@@ -78,7 +78,7 @@ public class Search {
 		if (inited) {
 			return;
 		}
-		cs.min2phase.Tools.init();
+		cs.min2phase.Search.init();
 
 		System.out.println("Initialize Center1 Solver...");
 
@@ -247,11 +247,8 @@ public class Search {
 		}
 
 		String facelet = solcube.to333Facelet();
-		String sol = search333.solution(facelet, 20, 100, 50, 0);
-		if (sol.startsWith("Error 8")) {
-			sol = search333.solution(facelet, 21, 1000000, 30, 0);
-		}
-		int len333 = sol.length() / 3;
+		String sol = search333.solution(facelet, 21, 1000000, 500, 0);
+		int len333 = search333.length();
 		if (sol.startsWith("Error")) {
 			System.out.println(sol);
 			System.out.println(solcube);
