@@ -4,3 +4,7 @@
 *.jar
 *.war
 *.ear
+
+cs/
+threephase.data
+twophase.data
