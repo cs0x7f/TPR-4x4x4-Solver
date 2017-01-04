@@ -7,6 +7,9 @@ TPR-4x4x4-Solver
  - sh make.sh   # generate threephase.jar
  - java -cp .:threephase.jar:twophase.jar test N   # solving N random-state scrambled cubes.
 
+Solve a specific cube from the command line
+ - java -cp .:threephase.jar:twophase.jar solver UUURUUUFUUUFUUUFRRRBRRRBRRRBRRRBRRRDFFFDFFFDFFFDDDDBDDDBDDDBDDDLFFFFLLLLLLLLLLLLULLLUBBBUBBBUBBB
+
 # Performance
  - Command: "java -cp .:threephase.jar:twophase.jar test 2000"
  - GUI demo: "java -cp .:threephase.jar:twophase.jar ui.MainProgram"
