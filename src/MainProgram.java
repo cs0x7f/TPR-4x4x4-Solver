@@ -285,8 +285,9 @@ public class MainProgram extends javax.swing.JFrame {
 			}
 
 		String cubeString = s.toString();
+		System.out.println("Cube Definition String: " + cubeString);
 		if (showString) {
-			JOptionPane.showMessageDialog(null, "Cube Definiton String: " + cubeString);
+			JOptionPane.showMessageDialog(null, "Cube Definition String: " + cubeString);
 		}
 		int mask = 0;
 		// mask |= useSeparator ? Search.USE_SEPARATOR : 0;
@@ -325,6 +326,7 @@ public class MainProgram extends javax.swing.JFrame {
 				result = "Timeout, no solution found within given maximum time!";
 				break;
 			}
+		System.out.println("Result: " + result);
 		JOptionPane.showMessageDialog(null, result, Double.toString((t/1000)/1000.0) + "ms", JOptionPane.INFORMATION_MESSAGE);
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	}
